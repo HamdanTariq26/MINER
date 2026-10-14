@@ -1,0 +1,19 @@
+﻿# Virtual environments
+.venv/
+venv/
+env/
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local secrets and environment settings
+.env
+.env.*
+!.env.example
