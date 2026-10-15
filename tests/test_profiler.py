@@ -13,11 +13,17 @@
 #   limitations under the License.
 
 import pandas as pd
+
+# Pytest for integration testing
 import pytest
 
 from src.data_mining.profiler import profile_dataset
 
 
+# Note function beginning by 'test' are automatically discoverded by pytest and report are
+# generated from them. ( :) general functionality of pytest)
+
+# Check the overview of dataset i.e column and row counts etc
 def test_dataset_overview():
     df = pd.DataFrame({
         "age": [20, 30, 40],
@@ -39,6 +45,7 @@ def test_missing_values():
     report = profile_dataset(df)
     column = report["columns"][0]
 
+    # debugging aid specifying condition to test
     assert column["missing_count"] == 2
     assert column["non_null_count"] == 2
     assert column["missing_percentage"] == 50.0
