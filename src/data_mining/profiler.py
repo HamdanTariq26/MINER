@@ -258,3 +258,39 @@ def _safe_value(value):
         return None
 
     return value.item() if hasattr(value, "item") else value
+
+def profile_loaded_dataset(
+    storage_dir,
+    dataset_id,
+    *,
+    engine,
+    batch_size=50_000,
+    include_correlations=True,
+    max_correlation_columns=50,
+    imbalance_threshold=0.8,
+):
+    """Profile a registered dataset using the selected engine."""
+    options = {
+        "include_correlations": include_correlations,
+        "max_correlation_columns": max_correlation_columns,
+        "imbalance_threshold": imbalance_threshold,
+    }
+
+    if engine == "pandas":
+        from .loader import iter_dataset
+
+        batches = iter_dataset(storage_dir, dataset_id, batch_size=batch_size)
+        table = pd.concat(batches, ignore_index=True)
+        return profile_dataset(table, **options)
+
+    if engine == "streaming":
+        from .streaming_profiler import profile_loaded_dataset as stream_profile
+
+        return stream_profile(
+            storage_dir,
+            dataset_id,
+            batch_size=batch_size,
+            **options,
+        )
+
+    raise ValueError("engine must be 'pandas' or 'streaming'")
